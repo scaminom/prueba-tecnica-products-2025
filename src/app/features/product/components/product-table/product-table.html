@@ -1,13 +1,4 @@
-@if (!loading() && !error()) {
-<div class="results-info">
-  <span>{{ productsCount() }} Resultados</span>
-  <select class="page-size-select" (change)="onPageSizeChanged($event)" [value]="pageSize()">
-    <option value="5">5</option>
-    <option value="10">10</option>
-    <option value="20">20</option>
-  </select>
-</div>
-} @if (loading()) {
+@if (loading()) {
 <div class="table-container">
   <table class="products-table">
     <thead>
@@ -84,8 +75,7 @@
   <h3>No hay productos disponibles</h3>
   <p>Comience agregando un nuevo producto financiero</p>
 </div>
-}
-
+} @else {
 <div class="table-container">
   <table class="products-table">
     <thead>
@@ -134,4 +124,18 @@
       }
     </tbody>
   </table>
+
+  <!-- Table Footer with separator and results/pagination -->
+  <div class="table-footer">
+    <div class="table-separator"></div>
+    <div class="table-footer-content">
+      <span class="results-count">{{ productsCount() }} Resultados</span>
+      <select class="page-size-select" (change)="onPageSizeChanged($event)" [value]="pageSize()">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+      </select>
+    </div>
+  </div>
 </div>
+}

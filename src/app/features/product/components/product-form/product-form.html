@@ -24,107 +24,110 @@
     </div>
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
-      <!-- ID Field -->
-      <div class="form-group">
-        <label for="id" class="form-label">ID</label>
-        <input
-          type="text"
-          id="id"
-          formControlName="id"
-          class="form-input"
-          [class.error]="isFieldInvalid('id')"
-          placeholder="Ingrese el ID del producto"
-        />
-        @if (isFieldInvalid('id')) {
-        <span class="error-message">{{ getFieldError('id', 'ID') }}</span>
-        }
+      <!-- ID and Name Fields Row -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="id" class="form-label">ID</label>
+          <input
+            type="text"
+            id="id"
+            formControlName="id"
+            class="form-input"
+            [class.error]="isFieldInvalid('id')"
+            placeholder="Ingrese el ID del producto"
+          />
+          @if (isFieldInvalid('id')) {
+          <span class="error-message">{{ getFieldError('id', 'ID') }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="name" class="form-label">Nombre</label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-input"
+            [class.error]="isFieldInvalid('name')"
+            placeholder="Ingrese el nombre del producto"
+          />
+          @if (isFieldInvalid('name')) {
+          <span class="error-message">{{ getFieldError('name', 'Nombre') }}</span>
+          }
+        </div>
       </div>
 
-      <!-- Name Field -->
-      <div class="form-group">
-        <label for="name" class="form-label">Nombre</label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          class="form-input"
-          [class.error]="isFieldInvalid('name')"
-          placeholder="Ingrese el nombre del producto"
-        />
-        @if (isFieldInvalid('name')) {
-        <span class="error-message">{{ getFieldError('name', 'Nombre') }}</span>
-        }
+      <!-- Description and Logo Fields Row -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="description" class="form-label">Descripción</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-textarea"
+            [class.error]="isFieldInvalid('description')"
+            placeholder="Ingrese la descripción del producto"
+            rows="3"
+          ></textarea>
+          @if (isFieldInvalid('description')) {
+          <span class="error-message">{{ getFieldError('description', 'Descripción') }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="logo" class="form-label">Logo</label>
+          <input
+            type="url"
+            id="logo"
+            formControlName="logo"
+            class="form-input"
+            [class.error]="isFieldInvalid('logo')"
+            placeholder="Ingrese la URL del logo"
+          />
+          @if (isFieldInvalid('logo')) {
+          <span class="error-message">{{ getFieldError('logo', 'Logo') }}</span>
+          }
+        </div>
       </div>
 
-      <!-- Description Field -->
-      <div class="form-group">
-        <label for="description" class="form-label">Descripción</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          class="form-textarea"
-          [class.error]="isFieldInvalid('description')"
-          placeholder="Ingrese la descripción del producto"
-          rows="3"
-        ></textarea>
-        @if (isFieldInvalid('description')) {
-        <span class="error-message">{{ getFieldError('description', 'Descripción') }}</span>
-        }
-      </div>
+      <!-- Release Date and Revision Date Fields Row -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date_release" class="form-label">Fecha de Liberación</label>
+          <input
+            type="date"
+            id="date_release"
+            formControlName="date_release"
+            class="form-input"
+            [class.error]="isFieldInvalid('date_release')"
+            (change)="onDateReleaseChange()"
+          />
+          @if (isFieldInvalid('date_release')) {
+          <span class="error-message">{{
+            getFieldError('date_release', 'Fecha de Liberación')
+          }}</span>
+          }
+        </div>
 
-      <!-- Logo Field -->
-      <div class="form-group">
-        <label for="logo" class="form-label">Logo</label>
-        <input
-          type="url"
-          id="logo"
-          formControlName="logo"
-          class="form-input"
-          [class.error]="isFieldInvalid('logo')"
-          placeholder="Ingrese la URL del logo"
-        />
-        @if (isFieldInvalid('logo')) {
-        <span class="error-message">{{ getFieldError('logo', 'Logo') }}</span>
-        }
-      </div>
-
-      <!-- Release Date Field -->
-      <div class="form-group">
-        <label for="date_release" class="form-label">Fecha de Liberación</label>
-        <input
-          type="date"
-          id="date_release"
-          formControlName="date_release"
-          class="form-input"
-          [class.error]="isFieldInvalid('date_release')"
-          (change)="onDateReleaseChange()"
-        />
-        @if (isFieldInvalid('date_release')) {
-        <span class="error-message">{{
-          getFieldError('date_release', 'Fecha de Liberación')
-        }}</span>
-        }
-      </div>
-
-      <!-- Revision Date Field -->
-      <div class="form-group">
-        <label for="date_revision" class="form-label">Fecha de Revisión</label>
-        <input
-          type="date"
-          id="date_revision"
-          formControlName="date_revision"
-          class="form-input"
-          [class.error]="isFieldInvalid('date_revision')"
-          readonly
-        />
-        @if (isFieldInvalid('date_revision')) {
-        <span class="error-message">
-          {{
-            getFieldError('date_revision', 'Fecha de Revisión') ||
-              'La fecha de revisión debe ser exactamente un año posterior a la fecha de liberación'
-          }}
-        </span>
-        }
+        <div class="form-group">
+          <label for="date_revision" class="form-label">Fecha de Revisión</label>
+          <input
+            type="date"
+            id="date_revision"
+            formControlName="date_revision"
+            class="form-input"
+            [class.error]="isFieldInvalid('date_revision')"
+            readonly
+          />
+          @if (isFieldInvalid('date_revision')) {
+          <span class="error-message">
+            {{
+              getFieldError('date_revision', 'Fecha de Revisión') ||
+                'La fecha de revisión debe ser exactamente un año posterior a la fecha de liberación'
+            }}
+          </span>
+          }
+        </div>
       </div>
 
       <!-- Form Actions -->
