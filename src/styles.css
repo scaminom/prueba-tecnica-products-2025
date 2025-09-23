@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand-blue: #1e3a8a;
+  --brand-accent: #ffdd00;
+  --brand-accent-hover: #e6c500;
+  --text-primary: #1f2937;
+  --text-secondary: #374151;
+  --bg-page: #f3f6fb;
+  --bg-card: #ffffff;
+  --border: #e5e7eb;
+  --muted: #6b7280;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+  color: var(--text-primary);
+  background: var(--bg-page);
+}
+
+h1, h2, h3 {
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+}
+
+button {
+  font-family: inherit;
+}
