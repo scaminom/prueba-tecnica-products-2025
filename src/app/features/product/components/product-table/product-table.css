@@ -132,7 +132,7 @@
 .dropdown-menu.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) translateX(-15px);
   pointer-events: auto;
 }
 
@@ -143,7 +143,7 @@
 }
 
 .products-table tbody tr:nth-last-child(-n+2) .dropdown-menu.show {
-  transform: translateY(0);
+  transform: translateY(0) translateX(-15px);
 }
 
 .products-table tbody td:last-child {
