@@ -11,7 +11,7 @@ Products application for TCS frontend career
 - **Language**: TypeScript 5.9.2
 - **Styling**: CSS3
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before running this project, make sure you have the following installed:
 
@@ -19,7 +19,7 @@ Before running this project, make sure you have the following installed:
 - npm (version 9 or higher)
 - Angular CLI (version 20 or higher)
 
-## 🔧 Installation
+## Installation
 
 1. Clone the repository:
 ```bash
@@ -32,7 +32,7 @@ cd prueba-tecnica-products-2025
 npm install
 ```
 
-## 🚀 Running the Application
+## Running the Application
 
 ### Development Server
 
