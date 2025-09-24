@@ -124,7 +124,7 @@ src/
 - `/products/create` - Create new product
 - `/products/edit/:id` - Edit existing product
 
-## 📊 Testing Coverage
+## Testing Coverage
 
 The project includes comprehensive test coverage for:
 
