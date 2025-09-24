@@ -3,6 +3,7 @@ import { ProductListStore } from './product-list.store';
 import { ProductStore } from './product.store';
 import { signal } from '@angular/core';
 import { Product } from '../../../shared/models/product';
+import { PRODUCT_LIST_SERVICE } from '../../../core/tokens/injection-tokens';
 
 describe('ProductListStore', () => {
   const mockProducts: Product[] = [
@@ -36,9 +37,27 @@ describe('ProductListStore', () => {
     products = signal<Product[]>(mockProducts);
   }
 
+  class ProductListServiceStub {
+    filterProducts(products: Product[], searchTerm: string) {
+      if (!searchTerm) return products;
+      return products.filter(
+        (p) =>
+          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    paginateProducts(products: Product[], pageSize: number) {
+      return products.slice(0, pageSize);
+    }
+  }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: ProductStore, useClass: ProductStoreStub }],
+      providers: [
+        { provide: ProductStore, useClass: ProductStoreStub },
+        { provide: PRODUCT_LIST_SERVICE, useClass: ProductListServiceStub },
+      ],
     });
   });
 

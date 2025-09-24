@@ -3,6 +3,7 @@ import { ProductStore } from './product.store';
 import { ProductService } from '../services/product.service';
 import { of, throwError } from 'rxjs';
 import { Product } from '../../../shared/models/product';
+import { PRODUCT_SERVICE } from '../../../core/tokens/injection-tokens';
 
 const sample: Product = {
   id: 'x1',
@@ -34,7 +35,7 @@ class ProductServiceStub {
 describe('ProductStore', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: ProductService, useClass: ProductServiceStub }],
+      providers: [{ provide: PRODUCT_SERVICE, useClass: ProductServiceStub }],
     });
   });
 
@@ -56,7 +57,7 @@ describe('ProductStore', () => {
     }
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      providers: [{ provide: ProductService, useClass: FailingService }],
+      providers: [{ provide: PRODUCT_SERVICE, useClass: FailingService }],
     });
     const store = TestBed.inject(ProductStore);
     store.loadProducts();

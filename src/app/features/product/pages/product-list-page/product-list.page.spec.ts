@@ -27,7 +27,7 @@ describe('ProductListPageComponent', () => {
   it('should toggle delete modal state', () => {
     const fixture = TestBed.createComponent(ProductListPageComponent);
     const comp = fixture.componentInstance;
-    expect(comp.showDeleteModal).toBeFalse();
+    expect(comp.showDeleteModal()).toBeFalse();
     comp.onDeleteProduct({
       id: '1',
       name: '',
@@ -36,9 +36,9 @@ describe('ProductListPageComponent', () => {
       date_release: '',
       date_revision: '',
     });
-    expect(comp.showDeleteModal).toBeTrue();
+    expect(comp.showDeleteModal()).toBeTrue();
     comp.cancelDelete();
-    expect(comp.showDeleteModal).toBeFalse();
+    expect(comp.showDeleteModal()).toBeFalse();
   });
 
   it('should navigate to create on onAddProduct and set selected on edit', () => {

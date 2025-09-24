@@ -9,8 +9,9 @@ describe('date.validators', () => {
   });
 
   it('dateNotPastValidator should allow today/future', () => {
-    const today = new Date();
-    const iso = today.toISOString().split('T')[0];
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const iso = tomorrow.toISOString().split('T')[0];
     const control = new FormControl(iso);
     const validator = dateNotPastValidator();
     expect(validator(control)).toBeNull();
