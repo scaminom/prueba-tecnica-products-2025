@@ -1,14 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductSearchComponent } from '../../components/product-search/product-search';
 import { ProductTableComponent } from '../../components/product-table/product-table';
 import { ProductStore } from '../../store/product.store';
 import { ProductListStore } from '../../store/product-list.store';
 import { Product } from '../../../../shared/models/product';
+import { HeaderComponent } from '../../../../shared/components/header/header.component';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-product-list-page',
-  imports: [ProductSearchComponent, ProductTableComponent],
+  imports: [ProductSearchComponent, ProductTableComponent, HeaderComponent, ModalComponent],
   templateUrl: './product-list.page.html',
   styleUrl: './product-list.page.css',
 })
@@ -17,9 +19,8 @@ export class ProductListPageComponent implements OnInit {
   private productListStore = inject(ProductListStore);
   private router = inject(Router);
 
-  // Modal state
-  showDeleteModal = false;
-  productToDelete: Product | null = null;
+  showDeleteModal = signal<boolean>(false);
+  productToDelete = signal<Product | null>(null);
 
   ngOnInit(): void {
     this.productStore.loadProducts();
@@ -35,8 +36,8 @@ export class ProductListPageComponent implements OnInit {
   }
 
   onDeleteProduct(product: Product): void {
-    this.productToDelete = product;
-    this.showDeleteModal = true;
+    this.productToDelete.set(product);
+    this.showDeleteModal.set(true);
   }
 
   onPageSizeChange(pageSize: number): void {
@@ -44,14 +45,14 @@ export class ProductListPageComponent implements OnInit {
   }
 
   confirmDelete(): void {
-    if (!this.productToDelete) return;
+    if (!this.productToDelete()) return;
 
-    this.productStore.deleteProduct(this.productToDelete.id);
+    this.productStore.deleteProduct(this.productToDelete()!.id);
     this.cancelDelete();
   }
 
   cancelDelete(): void {
-    this.showDeleteModal = false;
-    this.productToDelete = null;
+    this.showDeleteModal.set(false);
+    this.productToDelete.set(null);
   }
 }

@@ -8,19 +8,16 @@ import { Product } from '../../../../shared/models/product';
   selector: 'app-product-table',
   imports: [CommonModule],
   templateUrl: './product-table.html',
-  styleUrl: './product-table.css'
+  styleUrl: './product-table.css',
 })
 export class ProductTableComponent {
-  
   private productStore = inject(ProductStore);
   private productListStore = inject(ProductListStore);
 
-  // Output events
   onEditProduct = output<Product>();
   onDeleteProduct = output<Product>();
   onPageSizeChange = output<number>();
 
-  // Store getters
   loading = this.productStore.loading;
   error = this.productStore.error;
   isEmpty = this.productStore.isEmpty;
@@ -28,7 +25,6 @@ export class ProductTableComponent {
   productsCount = this.productListStore.filteredCount;
   pageSize = this.productListStore.pageSize;
 
-  // Local UI state
   openDropdownId: string | null = null;
 
   toggleDropdown(productId: string): void {
@@ -59,7 +55,7 @@ export class ProductTableComponent {
     return date.toLocaleDateString('es-ES', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric'
+      year: 'numeric',
     });
   }
 
@@ -70,5 +66,10 @@ export class ProductTableComponent {
   clearError(): void {
     this.productStore.clearError();
     this.productStore.loadProducts();
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'default-logo.svg';
   }
 }

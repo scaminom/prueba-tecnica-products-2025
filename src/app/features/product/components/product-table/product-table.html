@@ -1,56 +1,58 @@
 @if (loading()) {
 <div class="table-container">
-  <table class="products-table">
-    <thead>
-      <tr>
-        <th>Logo</th>
-        <th>Nombre del producto</th>
-        <th>
-          Descripción
-          <span class="info-icon" title="Descripción del producto">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
-              <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
-              <circle cx="12" cy="16" r="1" fill="#9ca3af" />
-            </svg>
-          </span>
-        </th>
-        <th>
-          Fecha de liberación
-          <span class="info-icon" title="Fecha de liberación">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
-              <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
-              <circle cx="12" cy="16" r="1" fill="#9ca3af" />
-            </svg>
-          </span>
-        </th>
-        <th>
-          Fecha de revisión
-          <span class="info-icon" title="Fecha de revisión">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
-              <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
-              <circle cx="12" cy="16" r="1" fill="#9ca3af" />
-            </svg>
-          </span>
-        </th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (_ of [1,2,3,4,5]; track $index) {
-      <tr>
-        <td><div class="skeleton skeleton-avatar"></div></td>
-        <td><div class="skeleton skeleton-text"></div></td>
-        <td><div class="skeleton skeleton-text long"></div></td>
-        <td><div class="skeleton skeleton-text sm"></div></td>
-        <td><div class="skeleton skeleton-text sm"></div></td>
-        <td><div class="skeleton skeleton-chip"></div></td>
-      </tr>
-      }
-    </tbody>
-  </table>
+  <div class="table-wrapper">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>Logo</th>
+          <th>Nombre del producto</th>
+          <th>
+            Descripción
+            <span class="info-icon" title="Descripción del producto">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
+                <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
+                <circle cx="12" cy="16" r="1" fill="#9ca3af" />
+              </svg>
+            </span>
+          </th>
+          <th>
+            Fecha de liberación
+            <span class="info-icon" title="Fecha de liberación">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
+                <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
+                <circle cx="12" cy="16" r="1" fill="#9ca3af" />
+              </svg>
+            </span>
+          </th>
+          <th>
+            Fecha de revisión
+            <span class="info-icon" title="Fecha de revisión">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
+                <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
+                <circle cx="12" cy="16" r="1" fill="#9ca3af" />
+              </svg>
+            </span>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (_ of [1,2,3,4,5]; track $index) {
+        <tr>
+          <td><div class="skeleton skeleton-avatar"></div></td>
+          <td><div class="skeleton skeleton-text"></div></td>
+          <td><div class="skeleton skeleton-text long"></div></td>
+          <td><div class="skeleton skeleton-text sm"></div></td>
+          <td><div class="skeleton skeleton-text sm"></div></td>
+          <td><div class="skeleton skeleton-chip"></div></td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
 } @if (error()) {
 <div class="error-container">
@@ -77,53 +79,60 @@
 </div>
 } @else {
 <div class="table-container">
-  <table class="products-table">
-    <thead>
-      <tr>
-        <th>Logo</th>
-        <th>Nombre del producto</th>
-        <th>Descripción</th>
-        <th>Fecha de liberación</th>
-        <th>Fecha de revisión</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (product of products(); track trackByProductId($index, product)) {
-      <tr>
-        <td>
-          <div class="logo-container">
-            <img [src]="product.logo" [alt]="product.name" class="product-logo" />
-          </div>
-        </td>
-        <td>{{ product.name }}</td>
-        <td>{{ product.description }}</td>
-        <td>{{ formatDate(product.date_release) }}</td>
-        <td>{{ formatDate(product.date_revision) }}</td>
-        <td>
-          <div class="dropdown-container">
-            <button class="dropdown-button" (click)="toggleDropdown(product.id)">
-              <svg width="4" height="16" viewBox="0 0 4 16">
-                <circle cx="2" cy="2" r="2" fill="#6b7280" />
-                <circle cx="2" cy="8" r="2" fill="#6b7280" />
-                <circle cx="2" cy="14" r="2" fill="#6b7280" />
-              </svg>
-            </button>
-
-            <div
-              class="dropdown-menu"
-              [class.show]="openDropdownId === product.id"
-              (click)="$event.stopPropagation()"
-            >
-              <button class="dropdown-item" (click)="onEdit(product)">Editar</button>
-              <button class="dropdown-item delete" (click)="onDelete(product)">Eliminar</button>
+  <div class="table-wrapper">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>Logo</th>
+          <th>Nombre del producto</th>
+          <th>Descripción</th>
+          <th>Fecha de liberación</th>
+          <th>Fecha de revisión</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of products(); track trackByProductId($index, product)) {
+        <tr>
+          <td>
+            <div class="logo-container">
+              <img
+                [src]="product.logo"
+                [alt]="product.name"
+                class="product-logo"
+                (error)="onImageError($event)"
+              />
             </div>
-          </div>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+          </td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ formatDate(product.date_release) }}</td>
+          <td>{{ formatDate(product.date_revision) }}</td>
+          <td>
+            <div class="dropdown-container">
+              <button class="dropdown-button" (click)="toggleDropdown(product.id)">
+                <svg width="4" height="16" viewBox="0 0 4 16">
+                  <circle cx="2" cy="2" r="2" fill="#6b7280" />
+                  <circle cx="2" cy="8" r="2" fill="#6b7280" />
+                  <circle cx="2" cy="14" r="2" fill="#6b7280" />
+                </svg>
+              </button>
+
+              <div
+                class="dropdown-menu"
+                [class.show]="openDropdownId === product.id"
+                (click)="$event.stopPropagation()"
+              >
+                <button class="dropdown-item" (click)="onEdit(product)">Editar</button>
+                <button class="dropdown-item delete" (click)="onDelete(product)">Eliminar</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
   <!-- Table Footer with separator and results/pagination -->
   <div class="table-footer">

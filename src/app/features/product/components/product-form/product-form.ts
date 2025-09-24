@@ -7,10 +7,12 @@ import { Product } from '../../../../shared/models/product';
 import { buildProductForm } from '../../forms/product-form.factory';
 import { toInputDateString, addYears } from '../../../../shared/utils/date.utils';
 import { markFormGroupTouched, isControlInvalid } from '../../../../shared/utils/form.utils';
+import { FormErrorService } from '../../../../shared/services/form-error.service';
+import { HeaderComponent } from '../../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-product-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css',
 })
@@ -19,6 +21,7 @@ export class ProductFormComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private productStore = inject(ProductStore);
+  private formErrorService = inject(FormErrorService);
 
   isEditMode = signal(false);
   productId = signal<string | null>(null);
@@ -82,7 +85,6 @@ export class ProductFormComponent implements OnInit {
       const formData = this.productForm.getRawValue();
 
       if (this.isEditMode()) {
-        // En edición no se debe enviar id
         const { id, ...rest } = formData as any;
         this.productStore.updateProduct({ id: this.productId()!, product: rest });
       } else {
@@ -120,17 +122,6 @@ export class ProductFormComponent implements OnInit {
     if (!field || !field.errors) return '';
 
     const fieldLabel = label ?? controlName;
-    const errors = field.errors;
-
-    if (errors['required']) return `${fieldLabel} es requerido`;
-    if (errors['minlength'])
-      return `${fieldLabel} debe tener al menos ${errors['minlength'].requiredLength} caracteres`;
-    if (errors['maxlength'])
-      return `${fieldLabel} debe tener máximo ${errors['maxlength'].requiredLength} caracteres`;
-    if (errors['dateInvalid']) return 'La fecha debe ser igual o mayor a la fecha actual';
-    if (errors['idExists']) return 'Este ID ya existe';
-    if (errors['pattern']) return `${fieldLabel} no es válido`;
-
-    return 'Campo inválido';
+    return this.formErrorService.getErrorMessage(field.errors, fieldLabel);
   }
 }

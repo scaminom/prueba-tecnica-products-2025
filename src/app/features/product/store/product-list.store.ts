@@ -4,6 +4,7 @@ import { inject } from '@angular/core';
 import { ProductStore } from './product.store';
 import { Product } from '../../../shared/models/product';
 import { ProductListState } from './interfaces/product-list-state.interface';
+import { PRODUCT_LIST_SERVICE } from '../../../core/tokens/injection-tokens';
 
 const initialUiState: ProductListState = {
   searchTerm: '',
@@ -16,22 +17,28 @@ export const ProductListStore = signalStore(
 
   withComputed((store) => {
     const productStore = inject(ProductStore);
+    const productListService = inject(PRODUCT_LIST_SERVICE);
 
     return {
       filteredProducts: computed(() => {
         const products = productStore.products();
-        const search = store.searchTerm().toLowerCase().trim();
-        if (!search) return products;
-        return products.filter((p) =>
-          [p.id, p.name, p.description].some((f) => f.toLowerCase().includes(search))
-        );
+        const searchTerm = store.searchTerm();
+        return productListService.filterProducts(products, searchTerm);
       }),
     };
   }),
 
-  withComputed((store) => ({
-    paginatedProducts: computed(() => store.filteredProducts().slice(0, store.pageSize())),
-  })),
+  withComputed((store) => {
+    const productListService = inject(PRODUCT_LIST_SERVICE);
+
+    return {
+      paginatedProducts: computed(() => {
+        const filteredProducts = store.filteredProducts();
+        const pageSize = store.pageSize();
+        return productListService.paginateProducts(filteredProducts, pageSize);
+      }),
+    };
+  }),
 
   withComputed((store) => ({
     tableDataSource: computed(() =>

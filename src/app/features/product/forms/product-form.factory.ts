@@ -12,14 +12,14 @@ export function buildProductForm(
   options: { verifyId: VerifyIdFn; isEditMode: () => boolean }
 ): FormGroup {
   const idControl = new FormControl('', {
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.minLength(3), Validators.maxLength(10)],
     asyncValidators: [uniqueProductIdValidator(options.verifyId, options.isEditMode)],
     updateOn: 'blur',
   });
 
   const form = fb.group({
     id: idControl,
-    name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+    name: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
     logo: [
       '',

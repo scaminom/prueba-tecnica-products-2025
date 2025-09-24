@@ -9,16 +9,19 @@
 .search-container {
   flex: 1;
   max-width: 400px;
+  min-width: 0; /* Permite que el flex item se encoja */
 }
 
 .search-input {
   width: 100%;
+  min-width: 0; /* Evita overflow en flex containers */
   padding: 0.75rem 1rem;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   font-size: 1rem;
   outline: none;
   transition: border-color 0.2s;
+  box-sizing: border-box; /* Incluye padding y border en el width */
 }
 
 .search-input:focus {
@@ -45,13 +48,91 @@
   background-color: var(--brand-accent-hover);
 }
 
+/* Tablet styles */
+@media (max-width: 768px) {
+  .search-section {
+    gap: 0.75rem;
+  }
+
+  .search-container {
+    max-width: 350px; /* Reducir max-width en tablets */
+  }
+
+  .search-input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-add {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9rem;
+    white-space: nowrap; /* Evita que el texto se rompa */
+  }
+}
+
+/* Small screens but still horizontal layout */
+@media (max-width: 720px) and (min-width: 641px) {
+  .search-section {
+    gap: 0.5rem;
+  }
+
+  .search-container {
+    max-width: 280px; /* Más restrictivo para pantallas pequeñas */
+  }
+
+  .search-input {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-add {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+}
+
+/* Mobile styles */
 @media (max-width: 640px) {
   .search-section {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 
   .search-container {
     max-width: none;
+  }
+
+  .search-input {
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .btn-add {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.75rem;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 480px) {
+  .search-section {
+    margin-bottom: 0.75rem;
+  }
+
+  .search-input {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.95rem;
+  }
+
+  .btn-add {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
   }
 }

@@ -1,10 +1,10 @@
 import { computed, inject } from '@angular/core';
 import { signalStore, withState, withMethods, withComputed, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap, catchError, of } from 'rxjs';
+import { pipe, switchMap, tap, catchError, of, map } from 'rxjs';
 import { Product } from '../../../shared/models/product';
-import { ProductService } from '../services/product.service';
 import { ProductState } from './interfaces/product-state.interface';
+import { PRODUCT_SERVICE } from '../../../core/tokens/injection-tokens';
 
 const initialState: ProductState = {
   products: [],
@@ -23,7 +23,7 @@ export const ProductStore = signalStore(
   })),
 
   withMethods((store) => {
-    const productService = inject(ProductService);
+    const productService = inject(PRODUCT_SERVICE);
 
     const setLoading = () => patchState(store, { loading: true, error: null });
     const setError = (message: string) => patchState(store, { error: message, loading: false });
@@ -127,7 +127,7 @@ export const ProductStore = signalStore(
 
       verifyProductId: (id: string) => {
         return productService.verifyProductId({ id }).pipe(
-          switchMap((response) => of(!!response)),
+          map((response) => response.data || false),
           catchError(() => of(false))
         );
       },

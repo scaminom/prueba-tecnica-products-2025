@@ -1,36 +1,16 @@
 <div class="product-list-container">
   <!-- Header -->
-  <header class="header">
-    <div class="bank-logo">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M12 2L2 7v10c0 5.5 3.8 7.7 9 9 5.2-1.3 9-3.5 9-9V7l-10-5z" fill="#0066cc" />
-      </svg>
-      <span class="bank-title">BANCO</span>
-    </div>
-  </header>
+  <app-header />
 
   <!-- Main Content -->
   <main class="main-content">
     <!-- Search Bar -->
     <div class="search-container">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search..."
-        (input)="onSearch($event)"
-        [value]="searchTerm()"
-      />
-    </div>
-
-    <!-- Add Button -->
-    <div class="add-button-container">
-      <button class="btn-add" (click)="onAddProduct()">Agregar</button>
+      <app-search-bar
+        [initialValue]="searchTerm()"
+        (searchChange)="onSearch($event)"
+        [placeholder]="'Buscar productos...'"
+      ></app-search-bar>
     </div>
 
     <!-- Products Table -->
@@ -84,7 +64,7 @@
                   [src]="product.logo"
                   [alt]="product.name"
                   class="product-logo"
-                  onerror="this.src='assets/default-logo.png'"
+                  (error)="onImageError($event)"
                 />
               </div>
             </td>
@@ -166,22 +146,20 @@
         <line x1="3" y1="10" x2="21" y2="10" stroke="#9ca3af" stroke-width="2" />
       </svg>
       <h3>No hay productos disponibles</h3>
-      <p>Comience agregando un nuevo producto financiero</p>
-      <button class="btn-add" (click)="onAddProduct()">Agregar Producto</button>
     </div>
     }
   </main>
 
   <!-- Delete Confirmation Modal -->
-  <div class="modal-overlay" [class.show]="showDeleteModal" (click)="cancelDelete()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+  <app-modal [show]="showDeleteModal()" (close)="cancelDelete()">
+    <div modal-body>
       <p class="modal-message">
         ¿Estas seguro de eliminar el producto {{ productToDelete?.name }}?
       </p>
-      <div class="modal-actions">
-        <button class="btn-cancel" (click)="cancelDelete()">Cancelar</button>
-        <button class="btn-confirm" (click)="confirmDelete()">Confirmar</button>
-      </div>
     </div>
-  </div>
+    <div modal-actions class="modal-actions">
+      <button class="btn-cancel" (click)="cancelDelete()">Cancelar</button>
+      <button class="btn-confirm" (click)="confirmDelete()">Confirmar</button>
+    </div>
+  </app-modal>
 </div>

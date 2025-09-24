@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import {
   CreateProductRequestBody,
   UpdateProductRequestBody,
@@ -11,38 +10,35 @@ import {
   UpdateProductResponse,
   DeleteProductResponse,
   VerifyProductResponse,
+  IProductService,
 } from '../interfaces';
-import { environment } from '../../../../environments/environment.development';
+import { PRODUCT_REPOSITORY } from '../../../core/tokens/injection-tokens';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductService {
-  private readonly productApiUrl = `${environment.apiUrl}/products`;
-
-  private http = inject(HttpClient);
+export class ProductService implements IProductService {
+  private repository = inject(PRODUCT_REPOSITORY);
 
   getProducts(): Observable<GetProductsResponse> {
-    return this.http.get<GetProductsResponse>(this.productApiUrl);
+    return this.repository.findAll().pipe(map((products) => ({ data: products })));
   }
 
   createProduct(product: CreateProductRequestBody): Observable<CreateProductResponse> {
-    return this.http.post<CreateProductResponse>(this.productApiUrl, product);
+    return this.repository.save(product).pipe(map((savedProduct) => ({ data: savedProduct })));
   }
 
   updateProduct(id: string, product: UpdateProductRequestBody): Observable<UpdateProductResponse> {
-    return this.http.put<UpdateProductResponse>(`${this.productApiUrl}/${id}`, product);
+    return this.repository
+      .update(id, product)
+      .pipe(map((updatedProduct) => ({ data: updatedProduct })));
   }
 
   deleteProduct(deleteProductParams: DeleteProductParams): Observable<DeleteProductResponse> {
-    return this.http.delete<DeleteProductResponse>(
-      `${this.productApiUrl}/${deleteProductParams.id}`
-    );
+    return this.repository.delete(deleteProductParams.id).pipe(map(() => ({})));
   }
 
   verifyProductId(verifyProductParams: VerifyProductParams): Observable<VerifyProductResponse> {
-    return this.http.get<VerifyProductResponse>(
-      `${this.productApiUrl}/verification/${verifyProductParams.id}`
-    );
+    return this.repository.exists(verifyProductParams.id).pipe(map((exists) => ({ data: exists })));
   }
 }

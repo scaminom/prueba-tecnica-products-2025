@@ -1,45 +1,43 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ProductStore } from '../../store/product.store';
 import { ProductListStore } from '../../store/product-list.store';
 import { Product } from '../../../../shared/models/product';
+import { SearchBarComponent } from '../../../../shared/components/search-bar/search-bar.component';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { HeaderComponent } from '../../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, SearchBarComponent, ModalComponent, HeaderComponent],
   templateUrl: './product-list.html',
-  styleUrl: './product-list.css'
+  styleUrl: './product-list.css',
 })
 export class ProductList implements OnInit {
-  // Inyección de stores separados
   productStore = inject(ProductStore);
   productListStore = inject(ProductListStore);
 
-  // Signals del store principal (data)
   loading = this.productStore.loading;
   error = this.productStore.error;
   hasError = this.productStore.hasError;
   isEmpty = this.productStore.isEmpty;
-  
-  // Signals del store de lista (UI state)
+
   products = this.productListStore.paginatedProducts;
   productsCount = this.productListStore.filteredCount;
   searchTerm = this.productListStore.searchTerm;
   pageSize = this.productListStore.pageSize;
 
-  // Estado local para UI
   openDropdownId: string | null = null;
-  showDeleteModal = false;
+  showDeleteModal = signal(false);
   productToDelete: Product | null = null;
 
   ngOnInit(): void {
     this.productStore.loadProducts();
   }
 
-  onSearch(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.productListStore.updateSearchTerm(target.value);
+  onSearch(term: string): void {
+    this.productListStore.updateSearchTerm(term);
   }
 
   onPageSizeChange(event: Event): void {
@@ -47,21 +45,14 @@ export class ProductList implements OnInit {
     this.productListStore.updatePageSize(Number(target.value));
   }
 
-  onAddProduct(): void {
-    // TODO: Navigate to add product form
-    console.log('Navigate to add product');
-  }
-
   onEditProduct(product: Product): void {
-    // TODO: Navigate to edit product form
     this.productStore.selectProduct(product);
-    console.log('Edit product:', product);
     this.closeDropdown();
   }
 
   onDeleteProduct(product: Product): void {
     this.productToDelete = product;
-    this.showDeleteModal = true;
+    this.showDeleteModal.set(true);
     this.closeDropdown();
   }
 
@@ -73,7 +64,7 @@ export class ProductList implements OnInit {
   }
 
   cancelDelete(): void {
-    this.showDeleteModal = false;
+    this.showDeleteModal.set(false);
     this.productToDelete = null;
   }
 
@@ -90,7 +81,7 @@ export class ProductList implements OnInit {
     return date.toLocaleDateString('es-ES', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric'
+      year: 'numeric',
     });
   }
 
@@ -101,5 +92,10 @@ export class ProductList implements OnInit {
   clearError(): void {
     this.productStore.clearError();
     this.productStore.loadProducts();
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'default-logo.svg';
   }
 }

@@ -9,4 +9,4 @@ export type UpdateProductResponse = ApiResponse<Product>;
 
 export type DeleteProductResponse = ApiResponse<void>;
 
-export type VerifyProductResponse = boolean;
+export type VerifyProductResponse = ApiResponse<boolean>;
