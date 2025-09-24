@@ -1,59 +1,142 @@
-# PruebaTecnicaProducts2025
+# Product Management System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.2.
+Products application for TCS frontend career
 
-## Development server
+## Technology Stack
 
-To start a local development server, run:
+- **Framework**: Angular 20.3.0
+- **State Management**: NgRx Signals 20.0.1
+- **Testing**: Jasmine 5.1.0 + Karma 6.4.0
+- **Build Tool**: Angular CLI 20.3.2
+- **Language**: TypeScript 5.9.2
+- **Styling**: CSS3
 
+## 📋 Prerequisites
+
+Before running this project, make sure you have the following installed:
+
+- Node.js (version 18 or higher)
+- npm (version 9 or higher)
+- Angular CLI (version 20 or higher)
+
+## 🔧 Installation
+
+1. Clone the repository:
 ```bash
+git clone https://github.com/scaminom/prueba-tecnica-products-2025
+cd prueba-tecnica-products-2025
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+## 🚀 Running the Application
+
+### Development Server
+
+Start the development server:
+```bash
+npm start
+# or
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Navigate to `http://localhost:4200/` in your browser. The application will automatically reload when you make changes to the source files.
 
-## Code scaffolding
+### Production Build
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
+Build the project for production:
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+## Testing
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Running Unit Tests
 
+Execute the unit tests:
 ```bash
+npm test
+# or
 ng test
 ```
 
-## Running end-to-end tests
+### Running Tests with Code Coverage
 
-For end-to-end (e2e) testing, run:
-
+Generate test coverage reports:
 ```bash
-ng e2e
+ng test --code-coverage
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The coverage reports will be generated in the `coverage/` directory. Open `coverage/prueba-tecnica-products-2025/index.html` in your browser to view the detailed coverage report.
 
-## Additional Resources
+### Test Configuration
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Test Runner**: Karma
+- **Testing Framework**: Jasmine
+- **Coverage Tool**: karma-coverage
+- **Browser**: Chrome (headless available)
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── core/                    # Core services and interceptors
+│   │   └── interceptors/        # HTTP interceptors
+│   ├── features/                # Feature modules
+│   │   └── product/             # Product management feature
+│   │       ├── components/      # Product components
+│   │       ├── pages/           # Product pages
+│   │       ├── services/        # Product services
+│   │       ├── store/           # NgRx Signals stores
+│   │       ├── forms/           # Form factories
+│   │       └── validators/      # Custom validators
+│   └── shared/                  # Shared components and utilities
+│       ├── components/          # Reusable components
+│       ├── models/              # Data models
+│       ├── services/            # Shared services
+│       ├── utils/               # Utility functions
+│       └── validators/          # Shared validators
+```
+
+## Key Components
+
+### Product Management
+- **Product List**: Displays products with search and pagination
+- **Product Form**: Create and edit products with validation
+- **Product Table**: Sortable and filterable product table
+- **Product Search**: Real-time search functionality
+
+### Core Features
+- **Error Handling**: Global error interceptor
+- **Form Validation**: Custom validators for business rules
+- **State Management**: Reactive state with NgRx Signals
+- **Routing**: Lazy-loaded feature modules
+
+## Available Routes
+
+- `/products` - Product list page (default)
+- `/products/create` - Create new product
+- `/products/edit/:id` - Edit existing product
+
+## 📊 Testing Coverage
+
+The project includes comprehensive test coverage for:
+
+- Components with user interactions
+- Services and business logic
+- Form validation and custom validators
+- Store state management
+- Utility functions
+
+## Scripts
+
+- `npm start` - Start development server
+- `npm test` - Run unit tests
+- `npm run build` - Build for production
+- `npm run watch` - Build in watch mode
