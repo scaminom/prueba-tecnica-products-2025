@@ -56,6 +56,18 @@
   padding: 2rem;
   border-radius: 0.75rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  animation: formSlideIn 0.4s cubic-bezier(0.21, 1.02, 0.73, 1) 0.1s both;
+}
+
+@keyframes formSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .form-row {
@@ -96,7 +108,7 @@
 
 .form-input:focus,
 .form-textarea:focus {
-  border-color: var(--brand-blue);
+  border-color: var(--brand-primary);
   box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.15);
 }
 

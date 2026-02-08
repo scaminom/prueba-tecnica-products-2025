@@ -2,16 +2,26 @@
   <app-header />
 
   <main class="main-content">
-    <app-product-search (onAddProduct)="onAddProduct()" />
+    <app-product-search
+      [searchTerm]="searchTerm()"
+      (searchChange)="onSearchChange($event)"
+      (addProduct)="onAddProduct()"
+    />
 
     <app-product-table
-      (onEditProduct)="onEditProduct($event)"
-      (onDeleteProduct)="onDeleteProduct($event)"
-      (onPageSizeChange)="onPageSizeChange($event)"
+      [products]="products()"
+      [loading]="loading()"
+      [error]="error()"
+      [isEmpty]="isEmpty()"
+      [productsCount]="filteredCount()"
+      [pageSize]="pageSize()"
+      (editProduct)="onEditProduct($event)"
+      (deleteProduct)="onDeleteProduct($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (retryLoad)="onRetryLoad()"
     />
   </main>
 
-  <!-- Delete Confirmation Modal -->
   <app-modal [show]="showDeleteModal()" (close)="cancelDelete()">
     <div modal-body>
       <p class="modal-message">

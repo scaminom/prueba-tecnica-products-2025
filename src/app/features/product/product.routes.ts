@@ -15,13 +15,13 @@ export const productRoutes: Routes = [
   {
     path: 'create',
     loadComponent: () =>
-      import('./components/product-form/product-form').then((m) => m.ProductFormComponent),
+      import('./pages/product-form-page/product-form.page').then((m) => m.ProductFormPageComponent),
     title: 'Crear Producto',
   },
   {
     path: 'edit/:id',
     loadComponent: () =>
-      import('./components/product-form/product-form').then((m) => m.ProductFormComponent),
+      import('./pages/product-form-page/product-form.page').then((m) => m.ProductFormPageComponent),
     title: 'Editar Producto',
   },
 ];

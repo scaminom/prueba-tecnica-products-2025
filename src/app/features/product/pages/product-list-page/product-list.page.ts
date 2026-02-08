@@ -1,9 +1,7 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { ProductSearchComponent } from '../../components/product-search/product-search';
 import { ProductTableComponent } from '../../components/product-table/product-table';
-import { ProductStore } from '../../store/product.store';
-import { ProductListStore } from '../../store/product-list.store';
+import { ProductFacade } from '../../facade/product.facade';
 import { Product } from '../../../../shared/models/product';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -13,26 +11,36 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
   imports: [ProductSearchComponent, ProductTableComponent, HeaderComponent, ModalComponent],
   templateUrl: './product-list.page.html',
   styleUrl: './product-list.page.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductListPageComponent implements OnInit {
-  private productStore = inject(ProductStore);
-  private productListStore = inject(ProductListStore);
-  private router = inject(Router);
+  private readonly facade = inject(ProductFacade);
 
-  showDeleteModal = signal<boolean>(false);
+  readonly products = this.facade.products;
+  readonly loading = this.facade.loading;
+  readonly error = this.facade.error;
+  readonly isEmpty = this.facade.isEmpty;
+  readonly filteredCount = this.facade.filteredCount;
+  readonly pageSize = this.facade.pageSize;
+  readonly searchTerm = this.facade.searchTerm;
+
+  showDeleteModal = signal(false);
   productToDelete = signal<Product | null>(null);
 
   ngOnInit(): void {
-    this.productStore.loadProducts();
+    this.facade.loadProducts();
   }
 
   onAddProduct(): void {
-    this.router.navigate(['/products/create']);
+    this.facade.navigateToCreate();
+  }
+
+  onSearchChange(term: string): void {
+    this.facade.onSearchChange(term);
   }
 
   onEditProduct(product: Product): void {
-    this.productStore.selectProduct(product);
-    this.router.navigate(['/products/edit', product.id]);
+    this.facade.navigateToEdit(product);
   }
 
   onDeleteProduct(product: Product): void {
@@ -41,13 +49,18 @@ export class ProductListPageComponent implements OnInit {
   }
 
   onPageSizeChange(pageSize: number): void {
-    this.productListStore.updatePageSize(pageSize);
+    this.facade.updatePageSize(pageSize);
+  }
+
+  onRetryLoad(): void {
+    this.facade.retryLoad();
   }
 
   confirmDelete(): void {
-    if (!this.productToDelete()) return;
+    const product = this.productToDelete();
+    if (!product) return;
 
-    this.productStore.deleteProduct(this.productToDelete()!.id);
+    this.facade.deleteProduct(product.id);
     this.cancelDelete();
   }
 

@@ -1,11 +1,10 @@
-import { Component, output, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, output, input } from '@angular/core';
 
 @Component({
   selector: 'app-search-bar',
-  standalone: true,
-  imports: [],
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBarComponent {
   placeholder = input<string>('Search...');

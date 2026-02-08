@@ -67,7 +67,14 @@ describe('ProductListStore', () => {
     store.updatePageSize(2);
 
     const filtered = store.filteredProducts();
-    expect(filtered.length).toBe(3); // Alpha, Beta, Gamma
-    expect(store.paginatedProducts().length).toBe(2); // pageSize limit
+    expect(filtered.length).toBe(3);
+    expect(store.paginatedProducts().length).toBe(2);
+  });
+
+  it('should compute filteredCount', () => {
+    const store = TestBed.inject(ProductListStore);
+    expect(store.filteredCount()).toBe(3);
+    store.updateSearchTerm('Alpha');
+    expect(store.filteredCount()).toBe(1);
   });
 });

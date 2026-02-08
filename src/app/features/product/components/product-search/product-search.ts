@@ -1,26 +1,23 @@
-import { Component, inject, output } from '@angular/core';
-import { ProductListStore } from '../../store/product-list.store';
+import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-product-search',
-  imports: [],
   templateUrl: './product-search.html',
-  styleUrl: './product-search.css'
+  styleUrl: './product-search.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductSearchComponent {
+  searchTerm = input<string>('');
 
-  private productListStore = inject(ProductListStore);
-
-  onAddProduct = output<void>();
-
-  searchTerm = this.productListStore.searchTerm;
+  searchChange = output<string>();
+  addProduct = output<void>();
 
   onSearch(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.productListStore.updateSearchTerm(target.value);
+    this.searchChange.emit(target.value);
   }
 
   onAdd(): void {
-    this.onAddProduct.emit();
+    this.addProduct.emit();
   }
 }

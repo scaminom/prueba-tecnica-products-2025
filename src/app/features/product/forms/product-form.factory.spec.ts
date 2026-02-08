@@ -26,9 +26,8 @@ describe('buildProductForm', () => {
     const form = createForm();
     const id = form.get('id')!;
     id.setValue('');
-    expect(id.valid).toBeFalse(); // required
+    expect(id.valid).toBeFalse();
     id.setValue('dup');
-    // For async validator, force validation cycle
     id.updateValueAndValidity();
     setTimeout(() => {
       expect(id.errors)?.toEqual({ idExists: true });

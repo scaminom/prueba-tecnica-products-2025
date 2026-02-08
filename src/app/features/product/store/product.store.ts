@@ -1,10 +1,7 @@
-import { computed, inject } from '@angular/core';
+import { computed } from '@angular/core';
 import { signalStore, withState, withMethods, withComputed, patchState } from '@ngrx/signals';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap, catchError, of, map } from 'rxjs';
 import { Product } from '../../../shared/models/product';
 import { ProductState } from './interfaces/product-state.interface';
-import { PRODUCT_SERVICE } from '../../../core/tokens/injection-tokens';
 
 const initialState: ProductState = {
   products: [],
@@ -22,115 +19,31 @@ export const ProductStore = signalStore(
     isEmpty: computed(() => !store.loading() && !store.error() && store.products().length === 0),
   })),
 
-  withMethods((store) => {
-    const productService = inject(PRODUCT_SERVICE);
+  withMethods((store) => ({
+    setLoading: () => patchState(store, { loading: true, error: null }),
+    setError: (message: string) => patchState(store, { error: message, loading: false }),
+    clearError: () => patchState(store, { error: null }),
+    clearLoading: () => patchState(store, { loading: false }),
 
-    const setLoading = () => patchState(store, { loading: true, error: null });
-    const setError = (message: string) => patchState(store, { error: message, loading: false });
+    setProducts: (products: Product[]) =>
+      patchState(store, { products, loading: false }),
 
-    return {
-      selectProduct: (product: Product | null) => {
-        patchState(store, { selectedProduct: product });
-      },
+    addProduct: (product: Product) =>
+      patchState(store, { products: [...store.products(), product], loading: false }),
 
-      clearError: () => {
-        patchState(store, { error: null });
-      },
+    replaceProduct: (id: string, product: Product) =>
+      patchState(store, {
+        products: store.products().map((p) => (p.id === id ? { ...p, ...product } : p)),
+        loading: false,
+      }),
 
-      loadProducts: rxMethod<void>(
-        pipe(
-          tap(setLoading),
-          switchMap(() =>
-            productService.getProducts().pipe(
-              tap((response) => {
-                if (response.data) {
-                  patchState(store, {
-                    products: response.data,
-                    loading: false,
-                  });
-                }
-              }),
-              catchError(() => {
-                setError('Error al cargar los productos. Intente nuevamente.');
-                return of(null);
-              })
-            )
-          )
-        )
-      ),
+    removeProduct: (id: string) =>
+      patchState(store, {
+        products: store.products().filter((p) => p.id !== id),
+        loading: false,
+      }),
 
-      createProduct: rxMethod<Product>(
-        pipe(
-          tap(setLoading),
-          switchMap((product) =>
-            productService.createProduct(product).pipe(
-              tap((response) => {
-                if (response.data) {
-                  patchState(store, {
-                    products: [...store.products(), response.data],
-                    loading: false,
-                  });
-                }
-              }),
-              catchError(() => {
-                setError('Error al crear el producto.');
-                return of(null);
-              })
-            )
-          )
-        )
-      ),
-
-      updateProduct: rxMethod<{ id: string; product: Omit<Product, 'id'> }>(
-        pipe(
-          tap(setLoading),
-          switchMap(({ id, product }) =>
-            productService.updateProduct(id, product).pipe(
-              tap((response) => {
-                if (response.data) {
-                  patchState(store, {
-                    products: store
-                      .products()
-                      .map((p) => (p.id === id ? { ...p, ...response.data } : p)),
-                    loading: false,
-                  });
-                }
-              }),
-              catchError(() => {
-                setError('Error al actualizar el producto.');
-                return of(null);
-              })
-            )
-          )
-        )
-      ),
-
-      deleteProduct: rxMethod<string>(
-        pipe(
-          tap(setLoading),
-          switchMap((id) =>
-            productService.deleteProduct({ id }).pipe(
-              tap(() => {
-                patchState(store, {
-                  products: store.products().filter((p) => p.id !== id),
-                  loading: false,
-                });
-              }),
-              catchError(() => {
-                setError('Error al eliminar el producto.');
-                return of(null);
-              })
-            )
-          )
-        )
-      ),
-
-      verifyProductId: (id: string) => {
-        return productService.verifyProductId({ id }).pipe(
-          map((response) => response.data || false),
-          catchError(() => of(false))
-        );
-      },
-    };
-  })
+    selectProduct: (product: Product | null) =>
+      patchState(store, { selectedProduct: product }),
+  }))
 );

@@ -1,10 +1,7 @@
 <div class="product-form-container">
-  <!-- Header -->
   <app-header />
 
-  <!-- Main Content -->
   <main class="main-content">
-    <!-- Back Button -->
     <div class="back-button-container">
       <button type="button" class="btn-back" (click)="onCancel()">
         <svg
@@ -31,7 +28,6 @@
     </div>
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
-      <!-- ID and Name Fields Row -->
       <div class="form-row">
         <div class="form-group">
           <label for="id" class="form-label">ID</label>
@@ -64,7 +60,6 @@
         </div>
       </div>
 
-      <!-- Description and Logo Fields Row -->
       <div class="form-row">
         <div class="form-group">
           <label for="description" class="form-label">Descripción</label>
@@ -97,7 +92,6 @@
         </div>
       </div>
 
-      <!-- Release Date and Revision Date Fields Row -->
       <div class="form-row">
         <div class="form-group">
           <label for="date_release" class="form-label">Fecha de Liberación</label>
@@ -137,7 +131,6 @@
         </div>
       </div>
 
-      <!-- Form Actions -->
       <div class="form-actions">
         <button type="button" class="btn-secondary" (click)="onReset()">Reiniciar</button>
         <button type="submit" class="btn-primary" [disabled]="productForm.invalid || loading()">
@@ -146,7 +139,6 @@
       </div>
     </form>
 
-    <!-- Error Display -->
     @if (error()) {
     <div class="error-container">
       <div class="error-message-global">

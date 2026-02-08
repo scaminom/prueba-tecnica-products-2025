@@ -40,7 +40,7 @@
 
 .btn-cancel {
   background-color: #eef2ff;
-  color: var(--brand-blue);
+  color: var(--brand-primary);
 }
 
 .btn-cancel:hover {

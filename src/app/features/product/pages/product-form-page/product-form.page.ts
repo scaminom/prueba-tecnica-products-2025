@@ -1,8 +1,8 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectionStrategy, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ProductStore } from '../../store/product.store';
+import { ActivatedRoute } from '@angular/router';
+import { ProductFacade } from '../../facade/product.facade';
 import { Product } from '../../../../shared/models/product';
 import { buildProductForm } from '../../forms/product-form.factory';
 import { toInputDateString, addYears } from '../../../../shared/utils/date.utils';
@@ -11,48 +11,51 @@ import { FormErrorService } from '../../../../shared/services/form-error.service
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 
 @Component({
-  selector: 'app-product-form',
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
-  templateUrl: './product-form.html',
-  styleUrl: './product-form.css',
+  selector: 'app-product-form-page',
+  imports: [ReactiveFormsModule, HeaderComponent],
+  templateUrl: './product-form.page.html',
+  styleUrl: './product-form.page.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductFormComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private productStore = inject(ProductStore);
-  private formErrorService = inject(FormErrorService);
+export class ProductFormPageComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly facade = inject(ProductFacade);
+  private readonly formErrorService = inject(FormErrorService);
+  private readonly destroyRef = inject(DestroyRef);
 
   isEditMode = signal(false);
   productId = signal<string | null>(null);
-  loading = this.productStore.loading;
-  error = this.productStore.error;
+  loading = this.facade.loading;
+  error = this.facade.error;
 
   productForm: FormGroup;
 
   constructor() {
     this.productForm = buildProductForm(this.fb, {
-      verifyId: (id: string) => this.productStore.verifyProductId(id),
+      verifyId: (id: string) => this.facade.verifyProductId(id),
       isEditMode: this.isEditMode,
     });
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      if (params['id']) {
-        this.isEditMode.set(true);
-        this.productId.set(params['id']);
-        this.loadProductForEdit(params['id']);
-      }
-    });
+    this.route.params
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        if (params['id']) {
+          this.isEditMode.set(true);
+          this.productId.set(params['id']);
+          this.loadProductForEdit(params['id']);
+        }
+      });
   }
 
   private loadProductForEdit(id: string): void {
-    const product = this.productStore.selectedProduct();
+    const product = this.facade.selectedProduct();
     if (product && product.id === id) {
       this.populateForm(product);
     } else {
-      this.router.navigate(['/products']);
+      this.facade.navigateToList();
     }
   }
 
@@ -86,12 +89,10 @@ export class ProductFormComponent implements OnInit {
 
       if (this.isEditMode()) {
         const { id, ...rest } = formData as any;
-        this.productStore.updateProduct({ id: this.productId()!, product: rest });
+        this.facade.updateProduct(this.productId()!, rest);
       } else {
-        this.productStore.createProduct(formData);
+        this.facade.createProduct(formData);
       }
-
-      this.router.navigate(['/products']);
     } else {
       markFormGroupTouched(this.productForm);
     }
@@ -99,7 +100,7 @@ export class ProductFormComponent implements OnInit {
 
   onReset(): void {
     if (this.isEditMode()) {
-      const product = this.productStore.selectedProduct();
+      const product = this.facade.selectedProduct();
       if (product) {
         this.populateForm(product);
       }
@@ -110,7 +111,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/products']);
+    this.facade.navigateToList();
   }
 
   isFieldInvalid(fieldName: string): boolean {

@@ -1,53 +1,48 @@
-import { Component, inject, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ProductStore } from '../../store/product.store';
-import { ProductListStore } from '../../store/product-list.store';
+import { Component, ChangeDetectionStrategy, input, output, signal } from '@angular/core';
 import { Product } from '../../../../shared/models/product';
 
 @Component({
   selector: 'app-product-table',
-  imports: [CommonModule],
   templateUrl: './product-table.html',
   styleUrl: './product-table.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductTableComponent {
-  private productStore = inject(ProductStore);
-  private productListStore = inject(ProductListStore);
+  products = input.required<Product[]>();
+  loading = input.required<boolean>();
+  error = input.required<string | null>();
+  isEmpty = input.required<boolean>();
+  productsCount = input.required<number>();
+  pageSize = input.required<number>();
 
-  onEditProduct = output<Product>();
-  onDeleteProduct = output<Product>();
-  onPageSizeChange = output<number>();
+  editProduct = output<Product>();
+  deleteProduct = output<Product>();
+  pageSizeChange = output<number>();
+  retryLoad = output<void>();
 
-  loading = this.productStore.loading;
-  error = this.productStore.error;
-  isEmpty = this.productStore.isEmpty;
-  products = this.productListStore.paginatedProducts;
-  productsCount = this.productListStore.filteredCount;
-  pageSize = this.productListStore.pageSize;
-
-  openDropdownId: string | null = null;
+  openDropdownId = signal<string | null>(null);
 
   toggleDropdown(productId: string): void {
-    this.openDropdownId = this.openDropdownId === productId ? null : productId;
+    this.openDropdownId.update((current) => (current === productId ? null : productId));
   }
 
   closeDropdown(): void {
-    this.openDropdownId = null;
+    this.openDropdownId.set(null);
   }
 
   onEdit(product: Product): void {
-    this.onEditProduct.emit(product);
+    this.editProduct.emit(product);
     this.closeDropdown();
   }
 
   onDelete(product: Product): void {
-    this.onDeleteProduct.emit(product);
+    this.deleteProduct.emit(product);
     this.closeDropdown();
   }
 
   onPageSizeChanged(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    this.onPageSizeChange.emit(Number(target.value));
+    this.pageSizeChange.emit(Number(target.value));
   }
 
   formatDate(dateString: string): string {
@@ -57,15 +52,6 @@ export class ProductTableComponent {
       month: '2-digit',
       year: 'numeric',
     });
-  }
-
-  trackByProductId(index: number, product: Product): string {
-    return product.id;
-  }
-
-  clearError(): void {
-    this.productStore.clearError();
-    this.productStore.loadProducts();
   }
 
   onImageError(event: Event): void {

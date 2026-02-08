@@ -1,31 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ProductTableComponent } from './product-table';
-import { ProductStore } from '../../store/product.store';
-import { ProductListStore } from '../../store/product-list.store';
-import { signal } from '@angular/core';
 import { Product } from '../../../../shared/models/product';
-
-class ProductStoreStub {
-  private _loading = false;
-  private _error: string | null = null;
-  private _isEmpty = false;
-  loading = () => this._loading;
-  error = () => this._error;
-  isEmpty = () => this._isEmpty;
-  setLoading(v: boolean) {
-    this._loading = v;
-  }
-  setError(v: string | null) {
-    this._error = v;
-  }
-  setEmpty(v: boolean) {
-    this._isEmpty = v;
-  }
-  clearError() {
-    this._error = null;
-  }
-  loadProducts() {}
-}
 
 const products: Product[] = [
   {
@@ -38,89 +13,96 @@ const products: Product[] = [
   },
 ];
 
-class ProductListStoreStub {
-  paginatedProducts = signal<Product[]>(products);
-  filteredCount = () => products.length;
-  pageSize = () => 5;
-}
-
 describe('ProductTableComponent', () => {
+  let fixture: ComponentFixture<ProductTableComponent>;
+  let comp: ProductTableComponent;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProductTableComponent],
-      providers: [
-        { provide: ProductStore, useClass: ProductStoreStub },
-        { provide: ProductListStore, useClass: ProductListStoreStub },
-      ],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(ProductTableComponent);
+    comp = fixture.componentInstance;
   });
 
-  it('should render rows', () => {
-    const fixture = TestBed.createComponent(ProductTableComponent);
+  function setDefaultInputs(overrides: Partial<{
+    products: Product[];
+    loading: boolean;
+    error: string | null;
+    isEmpty: boolean;
+    productsCount: number;
+    pageSize: number;
+  }> = {}): void {
+    fixture.componentRef.setInput('products', overrides.products ?? products);
+    fixture.componentRef.setInput('loading', overrides.loading ?? false);
+    fixture.componentRef.setInput('error', overrides.error ?? null);
+    fixture.componentRef.setInput('isEmpty', overrides.isEmpty ?? false);
+    fixture.componentRef.setInput('productsCount', overrides.productsCount ?? products.length);
+    fixture.componentRef.setInput('pageSize', overrides.pageSize ?? 5);
     fixture.detectChanges();
+  }
+
+  it('should render rows', () => {
+    setDefaultInputs();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelectorAll('tbody tr').length).toBe(1);
   });
 
   it('should render skeletons when loading', () => {
-    const store = TestBed.inject(ProductStore) as unknown as ProductStoreStub;
-    store.setLoading(true);
-    const fixture = TestBed.createComponent(ProductTableComponent);
-    fixture.detectChanges();
+    setDefaultInputs({ loading: true });
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelectorAll('.skeleton').length).toBeGreaterThan(0);
   });
 
   it('should render error container when error present', () => {
-    const store = TestBed.inject(ProductStore) as unknown as ProductStoreStub;
-    store.setError('Error');
-    const fixture = TestBed.createComponent(ProductTableComponent);
-    fixture.detectChanges();
+    setDefaultInputs({ error: 'Error' });
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.error-container')).toBeTruthy();
   });
 
-  it('should emit onEdit and onDelete from actions', () => {
-    const fixture = TestBed.createComponent(ProductTableComponent);
-    const comp = fixture.componentInstance;
-    spyOn(comp.onEditProduct, 'emit');
-    spyOn(comp.onDeleteProduct, 'emit');
-    fixture.detectChanges();
+  it('should render empty state when isEmpty', () => {
+    setDefaultInputs({ isEmpty: true, products: [] });
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.empty-state')).toBeTruthy();
+  });
+
+  it('should emit editProduct and deleteProduct from actions', () => {
+    setDefaultInputs();
+    spyOn(comp.editProduct, 'emit');
+    spyOn(comp.deleteProduct, 'emit');
 
     comp.onEdit(products[0]);
     comp.onDelete(products[0]);
-    expect(comp.onEditProduct.emit).toHaveBeenCalled();
-    expect(comp.onDeleteProduct.emit).toHaveBeenCalled();
+    expect(comp.editProduct.emit).toHaveBeenCalled();
+    expect(comp.deleteProduct.emit).toHaveBeenCalled();
   });
 
-  it('should emit onPageSizeChange when select changes', () => {
-    const fixture = TestBed.createComponent(ProductTableComponent);
-    const comp = fixture.componentInstance;
-    spyOn(comp.onPageSizeChange, 'emit');
-    fixture.detectChanges();
+  it('should emit pageSizeChange when select changes', () => {
+    setDefaultInputs();
+    spyOn(comp.pageSizeChange, 'emit');
     const select = fixture.nativeElement.querySelector('.page-size-select') as HTMLSelectElement;
     select.value = '10';
     select.dispatchEvent(new Event('change'));
-    expect(comp.onPageSizeChange.emit).toHaveBeenCalledWith(10);
+    expect(comp.pageSizeChange.emit).toHaveBeenCalledWith(10);
+  });
+
+  it('should emit retryLoad on retry button click', () => {
+    setDefaultInputs({ error: 'Error' });
+    spyOn(comp.retryLoad, 'emit');
+    const btn = fixture.nativeElement.querySelector('.btn-retry') as HTMLButtonElement;
+    btn.click();
+    expect(comp.retryLoad.emit).toHaveBeenCalled();
   });
 
   it('should toggle and close dropdown', () => {
-    const fixture = TestBed.createComponent(ProductTableComponent);
-    const comp = fixture.componentInstance;
-    fixture.detectChanges();
+    setDefaultInputs();
     comp.toggleDropdown('1');
-    expect(comp.openDropdownId).toBe('1');
+    expect(comp.openDropdownId()).toBe('1');
     comp.toggleDropdown('1');
-    expect(comp.openDropdownId).toBeNull();
+    expect(comp.openDropdownId()).toBeNull();
     comp.toggleDropdown('1');
     comp.closeDropdown();
-    expect(comp.openDropdownId).toBeNull();
-  });
-
-  it('trackByProductId should return product id', () => {
-    const fixture = TestBed.createComponent(ProductTableComponent);
-    const comp = fixture.componentInstance;
-    const id = comp.trackByProductId(0, products[0]);
-    expect(id).toBe('1');
+    expect(comp.openDropdownId()).toBeNull();
   });
 });
