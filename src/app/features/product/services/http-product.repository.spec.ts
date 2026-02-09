@@ -215,7 +215,7 @@ describe('HttpProductRepository', () => {
 
   describe('exists', () => {
     it('should return true when product exists', (done) => {
-      const mockResponse = { data: true };
+      const mockResponse = true;
 
       repository.exists('test-id').subscribe((exists) => {
         expect(exists).toBe(true);
@@ -228,7 +228,7 @@ describe('HttpProductRepository', () => {
     });
 
     it('should return false when product does not exist', (done) => {
-      const mockResponse = { data: false };
+      const mockResponse = false;
 
       repository.exists('non-existent').subscribe((exists) => {
         expect(exists).toBe(false);
@@ -240,7 +240,7 @@ describe('HttpProductRepository', () => {
     });
 
     it('should return false when API returns no data', (done) => {
-      const mockResponse = {};
+      const mockResponse = null;
 
       repository.exists('test-id').subscribe((exists) => {
         expect(exists).toBe(false);

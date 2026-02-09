@@ -20,7 +20,7 @@ class ProductServiceStub {
   createProduct = jasmine.createSpy('createProduct').and.returnValue(of({ data: sample }));
   updateProduct = jasmine.createSpy('updateProduct').and.returnValue(of({ data: sample }));
   deleteProduct = jasmine.createSpy('deleteProduct').and.returnValue(of({}));
-  verifyProductId = jasmine.createSpy('verifyProductId').and.returnValue(of({ data: false }));
+  verifyProductId = jasmine.createSpy('verifyProductId').and.returnValue(of(false));
 }
 
 class ProductListServiceStub {
@@ -98,6 +98,7 @@ describe('ProductFacade', () => {
 
   it('should verify product id', (done) => {
     facade.verifyProductId('x1').subscribe((result) => {
+      console.log('verifyProductId result:', result);
       expect(result).toBeFalse();
       done();
     });

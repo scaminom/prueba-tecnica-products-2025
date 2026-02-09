@@ -240,7 +240,7 @@ describe('ProductService', () => {
       mockRepository.exists.and.returnValue(of(true));
 
       service.verifyProductId({ id: 'test-id' }).subscribe((response) => {
-        expect(response).toEqual({ data: true });
+        expect(response).toEqual(true);
         expect(mockRepository.exists).toHaveBeenCalledWith('test-id');
         expect(mockRepository.exists).toHaveBeenCalledTimes(1);
         done();
@@ -251,7 +251,7 @@ describe('ProductService', () => {
       mockRepository.exists.and.returnValue(of(false));
 
       service.verifyProductId({ id: 'non-existent' }).subscribe((response) => {
-        expect(response).toEqual({ data: false });
+        expect(response).toEqual(false);
         expect(mockRepository.exists).toHaveBeenCalledWith('non-existent');
         done();
       });
@@ -276,7 +276,7 @@ describe('ProductService', () => {
 
       const verifyParams = { id: 'specific-verify-id' };
       service.verifyProductId(verifyParams).subscribe((response) => {
-        expect(response.data).toBe(true);
+        expect(response).toBe(true);
         expect(mockRepository.exists).toHaveBeenCalledWith('specific-verify-id');
         done();
       });
@@ -321,7 +321,7 @@ describe('ProductService', () => {
         expect(updateResponse.data?.id).toBe(originalProduct.id);
 
         service.verifyProductId({ id: originalProduct.id }).subscribe((verifyResponse) => {
-          expect(verifyResponse.data).toBe(true);
+          expect(verifyResponse).toBe(true);
           done();
         });
       });

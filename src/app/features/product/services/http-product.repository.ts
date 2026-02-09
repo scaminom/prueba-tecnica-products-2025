@@ -45,9 +45,8 @@ export class HttpProductRepository implements IProductRepository {
   }
 
   exists(id: string): Observable<boolean> {
-    debugger;
     return this.http
       .get<boolean>(`${this.productApiUrl}/verification/${id}`)
-      .pipe(map((response) => response));
+      .pipe(map((response) => !!response));
   }
 }

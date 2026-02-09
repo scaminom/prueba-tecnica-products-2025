@@ -1,7 +1,7 @@
 import { Injectable, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, catchError, of, map } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, catchError, of, map, Observable } from 'rxjs';
 import { ProductStore } from '../store/product.store';
 import { ProductListStore } from '../store/product-list.store';
 import { PRODUCT_SERVICE } from '../../../core/tokens/injection-tokens';
@@ -106,9 +106,9 @@ export class ProductFacade {
       });
   }
 
-  verifyProductId(id: string) {
+  verifyProductId(id: string): Observable<boolean> {
     return this.productService.verifyProductId({ id }).pipe(
-      map((response) => response ?? false),
+      map((response) => response),
       catchError(() => of(false))
     );
   }
