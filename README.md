@@ -19,6 +19,18 @@ Before running this project, make sure you have the following installed:
 - npm (version 9 or higher)
 - Angular CLI (version 20 or higher)
 
+## Backend Setup
+
+This project consumes a local backend API. Follow these steps to run it:
+
+1. Unzip the `repo-interview-main.zip` file.
+2. Open a terminal pointing to the unzipped folder.
+3. Install dependencies with `npm install`.
+4. Start the backend with `npm run start:dev`.
+5. The service will be available at `http://localhost:3002`.
+
+> **Note:** If the backend does not have CORS enabled, you must add it manually. In the backend's main file (e.g. `app.ts` or `main.ts`), make sure CORS is configured to allow requests from `http://localhost:4200`.
+
 ## Installation
 
 1. Clone the repository:
@@ -69,10 +81,10 @@ ng test
 
 Generate test coverage reports:
 ```bash
-ng test --code-coverage
+ng test --watch=false
 ```
 
-The coverage reports will be generated in the `coverage/` directory. Open `coverage/prueba-tecnica-products-2025/index.html` in your browser to view the detailed coverage report.
+Code coverage is enabled by default in `angular.json`. The coverage reports will be generated in the `coverage/` directory. Open `coverage/index.html` in your browser to view the detailed coverage report.
 
 ### Test Configuration
 
@@ -91,6 +103,7 @@ src/
 │   ├── features/                # Feature modules
 │   │   └── product/             # Product management feature
 │   │       ├── components/      # Product components
+│   │       ├── facade/          # Facade layer 
 │   │       ├── pages/           # Product pages
 │   │       ├── services/        # Product services
 │   │       ├── store/           # NgRx Signals stores
