@@ -1,1 +1,5 @@
-export const environment = {};
+export const environment = {
+  production: true,
+  apiUrl: 'http://localhost:3002/bp',
+  enableDebug: false,
+};
