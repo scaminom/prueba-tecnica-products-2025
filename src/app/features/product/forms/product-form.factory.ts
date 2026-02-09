@@ -19,7 +19,7 @@ export function buildProductForm(
 
   const form = fb.group({
     id: idControl,
-    name: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+    name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
     logo: [
       '',

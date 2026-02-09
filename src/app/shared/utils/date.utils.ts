@@ -4,14 +4,14 @@ export function toInputDateString(date: string | Date): string {
 }
 
 export function isDateBeforeToday(value: string | Date): boolean {
-  const d = typeof value === 'string' ? new Date(value) : value;
+  const date = typeof value === 'string' ? new Date(value) : value;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return d < today;
+  return date < today;
 }
 
 export function addYears(date: string | Date, years: number): Date {
-  const d = typeof date === 'string' ? new Date(date) : new Date(date.getTime());
-  d.setFullYear(d.getFullYear() + years);
-  return d;
+  const parsedDate = typeof date === 'string' ? new Date(date) : new Date(date.getTime());
+  parsedDate.setFullYear(parsedDate.getFullYear() + years);
+  return parsedDate;
 }

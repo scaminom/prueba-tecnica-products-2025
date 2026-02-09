@@ -11,7 +11,7 @@ export class FormErrorService {
     minlength: (error, label) => `${label} debe tener al menos ${error.requiredLength} caracteres`,
     maxlength: (error, label) => `${label} debe tener máximo ${error.requiredLength} caracteres`,
     dateInvalid: (_, label) => 'La fecha debe ser igual o mayor a la fecha actual',
-    idExists: (_, label) => 'Este producto ID ya se encuentra registrado',
+    idExists: (_, label) => 'ID no válido',
     pattern: (_, label) => `${label} no es válido`,
     revisionMismatch: (_, label) =>
       'La fecha de revisión debe ser exactamente un año después de la fecha de lanzamiento',
