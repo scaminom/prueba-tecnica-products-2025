@@ -8,33 +8,15 @@
           <th>Nombre del producto</th>
           <th>
             Descripción
-            <span class="info-icon" title="Descripción del producto">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
-                <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
-                <circle cx="12" cy="16" r="1" fill="#9ca3af" />
-              </svg>
-            </span>
+            <app-tooltip text="Descripción del producto financiero" />
           </th>
           <th>
             Fecha de liberación
-            <span class="info-icon" title="Fecha de liberación">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
-                <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
-                <circle cx="12" cy="16" r="1" fill="#9ca3af" />
-              </svg>
-            </span>
+            <app-tooltip text="Fecha de lanzamiento del producto al mercado" />
           </th>
           <th>
             Fecha de revisión
-            <span class="info-icon" title="Fecha de revisión">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="#9ca3af" stroke-width="2" />
-                <line x1="12" y1="8" x2="12" y2="12" stroke="#9ca3af" stroke-width="2" />
-                <circle cx="12" cy="16" r="1" fill="#9ca3af" />
-              </svg>
-            </span>
+            <app-tooltip text="Fecha de reestructuración del producto" />
           </th>
           <th></th>
         </tr>
@@ -42,11 +24,11 @@
       <tbody>
         @for (_ of [1,2,3,4,5]; track $index) {
         <tr>
-          <td><div class="skeleton skeleton-avatar"></div></td>
-          <td><div class="skeleton skeleton-text"></div></td>
-          <td><div class="skeleton skeleton-text long"></div></td>
-          <td><div class="skeleton skeleton-text sm"></div></td>
-          <td><div class="skeleton skeleton-text sm"></div></td>
+          <td data-label="Logo"><div class="skeleton skeleton-avatar"></div></td>
+          <td data-label="Nombre"><div class="skeleton skeleton-text"></div></td>
+          <td data-label="Descripción"><div class="skeleton skeleton-text long"></div></td>
+          <td data-label="F. liberación"><div class="skeleton skeleton-text sm"></div></td>
+          <td data-label="F. revisión"><div class="skeleton skeleton-text sm"></div></td>
           <td><div class="skeleton skeleton-chip"></div></td>
         </tr>
         }
@@ -85,16 +67,16 @@
         <tr>
           <th>Logo</th>
           <th>Nombre del producto</th>
-          <th>Descripción</th>
-          <th>Fecha de liberación</th>
-          <th>Fecha de revisión</th>
+          <th>Descripción <app-tooltip text="Descripción del producto financiero" /></th>
+          <th>Fecha de liberación <app-tooltip text="Fecha de lanzamiento del producto al mercado" /></th>
+          <th>Fecha de revisión <app-tooltip text="Fecha de reestructuración del producto" /></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         @for (product of products(); track product.id) {
         <tr>
-          <td>
+          <td data-label="Logo">
             <div class="logo-container">
               <img
                 [src]="product.logo"
@@ -104,10 +86,10 @@
               />
             </div>
           </td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.description }}</td>
-          <td>{{ formatDate(product.date_release) }}</td>
-          <td>{{ formatDate(product.date_revision) }}</td>
+          <td data-label="Nombre">{{ product.name }}</td>
+          <td data-label="Descripción">{{ product.description }}</td>
+          <td data-label="F. liberación">{{ formatDate(product.date_release) }}</td>
+          <td data-label="F. revisión">{{ formatDate(product.date_revision) }}</td>
           <td>
             <div class="dropdown-container">
               <button class="dropdown-button" (click)="toggleDropdown(product.id)">

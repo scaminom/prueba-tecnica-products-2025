@@ -36,7 +36,9 @@
             id="id"
             formControlName="id"
             class="form-input"
+            [class.form-input--disabled]="productForm.get('id')?.disabled"
             [class.error]="isFieldInvalid('id')"
+            [attr.disabled]="productForm.get('id')?.disabled ? true : null"
             placeholder="Ingrese el ID del producto"
           />
           @if (isFieldInvalid('id')) {

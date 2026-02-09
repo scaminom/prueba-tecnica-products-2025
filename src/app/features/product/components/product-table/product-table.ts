@@ -1,11 +1,13 @@
 import { Component, ChangeDetectionStrategy, input, output, signal } from '@angular/core';
 import { Product } from '../../../../shared/models/product';
+import { TooltipComponent } from '../../../../shared/components/tooltip/tooltip.component';
 
 @Component({
   selector: 'app-product-table',
   templateUrl: './product-table.html',
   styleUrl: './product-table.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TooltipComponent],
 })
 export class ProductTableComponent {
   products = input.required<Product[]>();

@@ -8,7 +8,6 @@ import {
   CreateProductResponse,
   UpdateProductResponse,
   DeleteProductResponse,
-  VerifyProductResponse,
 } from './index';
 
 export interface IProductService {
@@ -16,12 +15,12 @@ export interface IProductService {
   createProduct(product: CreateProductRequestBody): Observable<CreateProductResponse>;
   updateProduct(id: string, product: UpdateProductRequestBody): Observable<UpdateProductResponse>;
   deleteProduct(params: DeleteProductParams): Observable<DeleteProductResponse>;
-  verifyProductId(params: VerifyProductParams): Observable<VerifyProductResponse>;
+  verifyProductId(params: VerifyProductParams): Observable<boolean>;
 }
 
 export interface IProductReader {
   getProducts(): Observable<GetProductsResponse>;
-  verifyProductId(params: VerifyProductParams): Observable<VerifyProductResponse>;
+  verifyProductId(params: VerifyProductParams): Observable<boolean>;
 }
 
 export interface IProductWriter {

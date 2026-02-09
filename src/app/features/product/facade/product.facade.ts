@@ -108,7 +108,7 @@ export class ProductFacade {
 
   verifyProductId(id: string) {
     return this.productService.verifyProductId({ id }).pipe(
-      map((response) => response.data || false),
+      map((response) => response ?? false),
       catchError(() => of(false))
     );
   }

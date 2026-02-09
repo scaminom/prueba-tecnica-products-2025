@@ -9,7 +9,6 @@ import {
   CreateProductResponse,
   UpdateProductResponse,
   DeleteProductResponse,
-  VerifyProductResponse,
   IProductService,
 } from '../interfaces';
 import { PRODUCT_REPOSITORY } from '../../../core/tokens/injection-tokens';
@@ -38,7 +37,7 @@ export class ProductService implements IProductService {
     return this.repository.delete(deleteProductParams.id).pipe(map(() => ({})));
   }
 
-  verifyProductId(verifyProductParams: VerifyProductParams): Observable<VerifyProductResponse> {
-    return this.repository.exists(verifyProductParams.id).pipe(map((exists) => ({ data: exists })));
+  verifyProductId(verifyProductParams: VerifyProductParams): Observable<boolean> {
+    return this.repository.exists(verifyProductParams.id);
   }
 }

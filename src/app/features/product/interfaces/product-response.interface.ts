@@ -8,5 +8,3 @@ export type CreateProductResponse = ApiResponse<Product>;
 export type UpdateProductResponse = ApiResponse<Product>;
 
 export type DeleteProductResponse = ApiResponse<void>;
-
-export type VerifyProductResponse = ApiResponse<boolean>;

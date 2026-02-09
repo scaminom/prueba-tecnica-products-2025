@@ -123,6 +123,15 @@
   cursor: not-allowed;
 }
 
+.form-input--disabled,
+.form-input:disabled {
+  background-color: #e5e7eb;
+  color: #6b7280;
+  border-color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
 .form-textarea {
   resize: vertical;
   min-height: 80px;
